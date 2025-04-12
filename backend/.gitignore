@@ -1,0 +1,39 @@
+# Ignore the HELP.md file
+HELP.md
+
+# Ignore all target directories
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Ignore application.properties (Sensitive Data)
+src/main/resources/application.properties
+
+# Ignore IDE-specific files
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code
+.vscode/
+.env
