@@ -3,7 +3,7 @@ import axios from "axios";
 const getChats = async (userId : number) => {
     console.log(userId);
     try {
-        const response = await axios.get("https://chat-app-spring-boot-7.onrender.com/user/getChats" , {
+        const response = await axios.get("https://chat-app-9lmm.onrender.com/user/getChats" , {
             withCredentials: true
         } );
         if(response.data.data)
@@ -21,7 +21,7 @@ const getChats = async (userId : number) => {
 const getMessages = async (senderId : number, receiverId : string) => {
     console.log(senderId);
     try {
-        const response = await axios.get("https://chat-app-spring-boot-7.onrender.com/user/getMessages" , {
+        const response = await axios.get("https://chat-app-9lmm.onrender.com/user/getMessages" , {
             params : {
                 receiverId : receiverId
             },

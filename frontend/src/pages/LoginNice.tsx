@@ -35,7 +35,7 @@ const LoginNice: React.FC = () => {
     setError('');
     
     try {
-      const response = await axios.post("https://chat-app-spring-boot-7.onrender.com/user/login", {
+      const response = await axios.post("https://chat-app-9lmm.onrender.com/user/login", {
         email, password
       }, {
         withCredentials: true

@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     try {
       console.log("called the login route");
       // const response = await axios.post("http://localhost:8080/user/login" , {
-      const response = await axios.post("https://chat-app-spring-boot-7.onrender.com/user/login", {
+      const response = await axios.post("https://chat-app-9lmm.onrender.com/user/login", {
         email, password
       }, {
         withCredentials: true

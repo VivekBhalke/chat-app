@@ -69,7 +69,7 @@ const Home: React.FC = () => {
         setIsSearching(true);
         try {
           const response = await axios.get(
-            `https://chat-app-spring-boot-7.onrender.com/user/searchUser?username=${debouncedUsername}`,
+            `https://chat-app-9lmm.onrender.com/user/searchUser?username=${debouncedUsername}`,
             { withCredentials: true }
           );
 
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
       try {
         console.log("reached the stomp client connection part");
         const socket = new WebSocket(
-          "https://chat-app-spring-boot-7.onrender.com/ws"
+          "https://chat-app-9lmm.onrender.com/ws"
         );
         const client = over(socket);
 

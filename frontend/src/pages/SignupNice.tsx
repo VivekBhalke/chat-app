@@ -41,7 +41,7 @@ const SignupNice: React.FC = () => {
     setError('');
     
     try {
-      const response = await axios.post("https://chat-app-spring-boot-7.onrender.com/user/signup", {
+      const response = await axios.post("https://chat-app-9lmm.onrender.com/user/signup", {
         email, 
         password, 
         username: name

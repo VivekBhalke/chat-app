@@ -22,7 +22,7 @@ const InitUser = () => {
         }
 
         try {
-          const response = await axios.get("https://chat-app-spring-boot-7.onrender.com/user/me" ,{
+          const response = await axios.get("https://chat-app-9lmm.onrender.com/user/me" ,{
             withCredentials : true
           });
          
