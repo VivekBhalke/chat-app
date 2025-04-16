@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getChats = async (userId : number) => {
-    
+    console.log(userId);
     try {
         const response = await axios.get("https://chat-app-spring-boot-7.onrender.com/user/getChats" , {
             withCredentials: true
@@ -19,6 +19,7 @@ const getChats = async (userId : number) => {
 
 // ✅ Fetch Messages in Increasing Time Order
 const getMessages = async (senderId : number, receiverId : string) => {
+    console.log(senderId);
     try {
         const response = await axios.get("https://chat-app-spring-boot-7.onrender.com/user/getMessages" , {
             params : {

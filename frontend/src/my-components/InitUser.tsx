@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-
+import  { useEffect } from 'react'
 import axios from 'axios';
 import useUserStore from '@/store/user';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +7,6 @@ const InitUser = () => {
   const setUserUsername = useUserStore((state)=>state.setUsername);
   const setUserId = useUserStore((state)=>state.setUserId);
   const setLoggedIn = useUserStore((state)=>state.setLoggedIn);
-  const userLoggedIn = useUserStore((state)=>state.loggedIn);
   const navigate = useNavigate();
   useEffect(()=>{
     async function getUser() {

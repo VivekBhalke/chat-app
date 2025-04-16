@@ -1,9 +1,7 @@
-import React from 'react'
-import { Button } from './components/ui/button'
+
 import InitUser from './my-components/InitUser'
 import { Route, Routes } from 'react-router-dom'
-import Login from './pages/Login'
-import Signup from './pages/Singup'
+
 
 import LoginNice from './pages/LoginNice'
 import SignupNice from './pages/SignupNice'

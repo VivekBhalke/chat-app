@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import useDebounce from "@/hooks/useDebounce";
 import { getChats } from "@/idbUtils/utils";
@@ -10,15 +9,15 @@ import useUserStore from "@/store/user";
 
 
 // shadcn/ui components
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+
 import { Search, MessageSquare, UserPlus, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+
 import ChatNice from "@/my-components/ChatNice";
 
 // Define types
@@ -43,11 +42,12 @@ const Home: React.FC = () => {
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("chats");
   
+  
   const setSelectedUser = useSelectedUser((state) => state.setSelectedUser);
   const selectedUser = useSelectedUser((state) => state.selectedUser);
   const stompClient = useStompStore((state) => state.stompClient);
   const setStompClient = useStompStore((state) => state.setStompClient);
-  const username = useUserStore((state) => state.username);
+  
   const userId = useUserStore((state) => state.userId);
 
   const debouncedUsername = useDebounce(otherUsername, 500);
@@ -220,18 +220,21 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="chats" className="flex-1 flex flex-col">
+        <Tabs 
+          defaultValue="chats" 
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="flex-1 flex flex-col"
+        >
           <TabsList className="grid grid-cols-2 mx-4 mt-2">
             <TabsTrigger 
-              value="chats" 
-              onClick={() => setActiveTab("chats")}
+              value="chats"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Chats
             </TabsTrigger>
             <TabsTrigger 
-              value="search" 
-              onClick={() => setActiveTab("search")}
+              value="search"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Search Results
