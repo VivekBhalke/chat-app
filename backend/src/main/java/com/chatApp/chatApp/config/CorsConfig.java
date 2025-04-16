@@ -11,7 +11,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // Allow CORS for all endpoints
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173/") // Replace with the allowed origin(s)
+                .allowedOrigins("https://chat-app-sigma-pink.vercel.app") // Replace with the allowed origin(s)
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed methods
                 .allowedHeaders("*") // Allowed headers
                 .allowCredentials(true); // Allow credentials (cookies, etc.)
