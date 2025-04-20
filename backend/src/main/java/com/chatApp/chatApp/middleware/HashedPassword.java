@@ -1,9 +1,6 @@
 package com.chatApp.chatApp.middleware;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +12,7 @@ public class HashedPassword {
 	{
 		return passwordEncoder.encode(password);
 	}
-	public  Boolean verify(String password , String hashPassword)
+	public Boolean verify(String password , String hashPassword)
 	{
 		return passwordEncoder.matches(password , hashPassword);
 	}
