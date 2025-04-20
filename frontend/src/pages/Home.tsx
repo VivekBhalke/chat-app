@@ -213,7 +213,7 @@ const Home: React.FC = () => {
 
       
       // Redirect to login page
-      window.location.href = '/';
+      window.location.reload();
     } catch (error) {
       console.error("Logout failed:", error);
     }
