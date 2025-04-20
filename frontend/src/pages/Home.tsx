@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { Search, MessageSquare, UserPlus, Loader2 } from "lucide-react";
+import { Search, MessageSquare, UserPlus, Loader2, LogOut } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import ChatNice from "@/my-components/ChatNice";
@@ -193,6 +193,32 @@ const Home: React.FC = () => {
     // On mobile, this could also close the sidebar or switch to the chat view
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post('https://chat-app-9lmm.onrender.com/user/logout', {}, 
+        { withCredentials: true }
+      );
+      
+      // Disconnect stomp client if connected
+      if (stompClient && stompClient.connected) {
+        stompClient.disconnect(() => {
+          console.log("Disconnected from STOMP");
+        });
+      }
+      
+      // Clear user data from store
+      useUserStore.setState({ userId: 0 });
+      useUserStore.setState({ username: "" });
+      useUserStore.setState({ loggedIn: false });
+
+      
+      // Redirect to login page
+      window.location.href = '/login';
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="h-screen w-full flex items-center justify-center">
@@ -207,7 +233,18 @@ const Home: React.FC = () => {
       {/* Sidebar */}
       <div className="w-full md:w-80 border-r flex flex-col h-full">
         <div className="p-4 border-b">
-          <CardTitle className="text-xl font-bold mb-4">Messages</CardTitle>
+          <div className="flex justify-between items-center mb-4">
+            <CardTitle className="text-xl font-bold">Messages</CardTitle>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleLogout} 
+              title="Logout"
+              className="h-8 w-8"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
