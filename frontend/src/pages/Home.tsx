@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import useDebounce from "@/hooks/useDebounce";
 import { getChats } from "@/idbUtils/utils";
@@ -9,15 +10,15 @@ import useUserStore from "@/store/user";
 
 
 // shadcn/ui components
-import { CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-import { Search, MessageSquare, UserPlus, Loader2, LogOut } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Search, MessageSquare, UserPlus, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { Badge } from "@/components/ui/badge";
 import ChatNice from "@/my-components/ChatNice";
 
 // Define types
@@ -42,12 +43,11 @@ const Home: React.FC = () => {
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("chats");
   
-  
   const setSelectedUser = useSelectedUser((state) => state.setSelectedUser);
   const selectedUser = useSelectedUser((state) => state.selectedUser);
   const stompClient = useStompStore((state) => state.stompClient);
   const setStompClient = useStompStore((state) => state.setStompClient);
-  
+  const username = useUserStore((state) => state.username);
   const userId = useUserStore((state) => state.userId);
 
   const debouncedUsername = useDebounce(otherUsername, 500);
@@ -69,7 +69,7 @@ const Home: React.FC = () => {
         setIsSearching(true);
         try {
           const response = await axios.get(
-            `https://chat-app-9lmm.onrender.com/user/searchUser?username=${debouncedUsername}`,
+            `https://chat-app-spring-boot-7.onrender.com/user/searchUser?username=${debouncedUsername}`,
             { withCredentials: true }
           );
 
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
       try {
         console.log("reached the stomp client connection part");
         const socket = new WebSocket(
-          "https://chat-app-9lmm.onrender.com/ws"
+          "https://chat-app-spring-boot-7.onrender.com/ws"
         );
         const client = over(socket);
 
@@ -193,32 +193,6 @@ const Home: React.FC = () => {
     // On mobile, this could also close the sidebar or switch to the chat view
   };
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('https://chat-app-9lmm.onrender.com/user/logout', {}, 
-        { withCredentials: true }
-      );
-      
-      // Disconnect stomp client if connected
-      if (stompClient && stompClient.connected) {
-        stompClient.disconnect(() => {
-          console.log("Disconnected from STOMP");
-        });
-      }
-      
-      // Clear user data from store
-      useUserStore.setState({ userId: 0 });
-      useUserStore.setState({ username: "" });
-      useUserStore.setState({ loggedIn: false });
-
-      
-      // Redirect to login page
-      window.location.reload();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
   if (loading) {
     return (
       <div className="h-screen w-full flex items-center justify-center">
@@ -233,18 +207,7 @@ const Home: React.FC = () => {
       {/* Sidebar */}
       <div className="w-full md:w-80 border-r flex flex-col h-full">
         <div className="p-4 border-b">
-          <div className="flex justify-between items-center mb-4">
-            <CardTitle className="text-xl font-bold">Messages</CardTitle>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handleLogout} 
-              title="Logout"
-              className="h-8 w-8"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
+          <CardTitle className="text-xl font-bold mb-4">Messages</CardTitle>
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -257,21 +220,18 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <Tabs 
-          defaultValue="chats" 
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="flex-1 flex flex-col"
-        >
+        <Tabs defaultValue="chats" className="flex-1 flex flex-col">
           <TabsList className="grid grid-cols-2 mx-4 mt-2">
             <TabsTrigger 
-              value="chats"
+              value="chats" 
+              onClick={() => setActiveTab("chats")}
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Chats
             </TabsTrigger>
             <TabsTrigger 
-              value="search"
+              value="search" 
+              onClick={() => setActiveTab("search")}
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               Search Results
