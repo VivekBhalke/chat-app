@@ -41,93 +41,94 @@ public class UserController {
 	private JWTCLASS jwtClass;
 	
 	@PostMapping("/signup")
-	public ResponseEntity<ApiResponse<UserEntityDTO>> singup(@RequestBody UserEntityDTO userEntityDTO , HttpServletResponse servletResponse)
-	{
-		try {
-			System.out.println("reached here");
-			Long userId = userService.signup(userEntityDTO);
-			userEntityDTO.setUserId(userId);
-			userEntityDTO.setPassword(null);
-			String token = jwtClass.getJWT(userId);
-			Cookie cookie = new Cookie("jwt", token);
-			cookie.setPath("/");                    
-			cookie.setMaxAge(60 * 60);  // 1 hour  
-			cookie.setHttpOnly(true);  // Prevent JavaScript access for security  
-			cookie.setSecure(true);  // Required for HTTPS  
-			
-			cookie.setAttribute("SameSite", "None");  // Needed for cross-site requests  
-	        
-	        servletResponse.addCookie(cookie);
-			ApiResponse<UserEntityDTO> response = new ApiResponse<UserEntityDTO>();
-			response.setHttpStatusCode(HttpStatus.OK);
-			response.setMessage("USER CREATED SUCCESSFULLY");
-			response.setData(userEntityDTO);
-			return ResponseEntity.ok(response);
-		}
-		catch(Exception e)
-		{
-			if(e instanceof ApiException)
-			{
-				ApiException exception = (ApiException)e;
-				return ResponseEntity.status(exception.getResponse().getHttpStatusCode()).body(exception.getResponse());
-			}
-		}
-		System.out.println("hi from the backend");
-		ApiResponse response = new ApiResponse();
-		response.setMessage("INTERNAL SERVER ERROR");
-		response.setData(null);
-		response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
-	}
+public ResponseEntity<ApiResponse<UserEntityDTO>> singup(@RequestBody UserEntityDTO userEntityDTO, HttpServletResponse servletResponse) {
+    try {
+        System.out.println("reached here");
+        Long userId = userService.signup(userEntityDTO);
+        userEntityDTO.setUserId(userId);
+        userEntityDTO.setPassword(null);
+        String token = jwtClass.getJWT(userId);
+
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+            .path("/")
+            .maxAge(60 * 60)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .domain("chat-app-9lmm.onrender.com")
+            .build();
+
+        servletResponse.addHeader("Set-Cookie", cookie.toString());
+        
+        ApiResponse<UserEntityDTO> response = new ApiResponse<>();
+        response.setHttpStatusCode(HttpStatus.OK);
+        response.setMessage("USER CREATED SUCCESSFULLY");
+        response.setData(userEntityDTO);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        if (e instanceof ApiException) {
+            ApiException exception = (ApiException) e;
+            return ResponseEntity.status(exception.getResponse().getHttpStatusCode()).body(exception.getResponse());
+        }
+    }
+    ApiResponse response = new ApiResponse();
+    response.setMessage("INTERNAL SERVER ERROR");
+    response.setData(null);
+    response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
+    return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
+}
 	
 	@PostMapping("/login")
-	public ResponseEntity<ApiResponse<UserEntityDTO>> login(@RequestBody UserEntityDTO userEntityDTO , HttpServletResponse servletResponse)
-	{
-		try {
-			System.out.println("reached login controller");
-			long userId = userService.login(userEntityDTO);
-			System.out.println("this is the user Id :" + userId);
-			String token = jwtClass.getJWT(userId);
-			Cookie cookie = new Cookie("jwt", token);
-			cookie.setPath("/");                    
-			cookie.setMaxAge(60 * 60);  // 1 hour  
-			cookie.setHttpOnly(true);  // Prevent JavaScript access for security  
-			cookie.setSecure(true);  // Required for HTTPS  
-			//cookie.setDomain("/");
-			
-			cookie.setAttribute("SameSite", "None");  // Needed for cross-site requests              // 1 hour expiration
-	        servletResponse.addCookie(cookie);
-			ApiResponse<UserEntityDTO> response = new ApiResponse<>();
-			response.setHttpStatusCode(HttpStatus.OK);
-			response.setMessage("USER LOGGED IN  SUCCESSFULLY");
-			response.setData(userEntityDTO);
-			return ResponseEntity.ok(response);
-		}
-		catch(Exception e)
-		{
-			if(e instanceof ApiException)
-			{
-				ApiException exception = (ApiException)e;
-				return ResponseEntity.status(exception.getResponse().getHttpStatusCode()).body(exception.getResponse());
-			}
-		}
-		System.out.println("hi from the backend");
-		ApiResponse response = new ApiResponse();
-		response.setMessage("INTERNAL SERVER ERROR");
-		response.setData(null);
-		response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
-	}
+public ResponseEntity<ApiResponse<UserEntityDTO>> login(@RequestBody UserEntityDTO userEntityDTO, HttpServletResponse servletResponse) {
+    try {
+        System.out.println("reached login controller");
+        long userId = userService.login(userEntityDTO);
+        System.out.println("this is the user Id :" + userId);
+        String token = jwtClass.getJWT(userId);
+
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+            .path("/")
+            .maxAge(60 * 60)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .domain("chat-app-9lmm.onrender.com")
+            .build();
+
+        servletResponse.addHeader("Set-Cookie", cookie.toString());
+
+        ApiResponse<UserEntityDTO> response = new ApiResponse<>();
+        response.setHttpStatusCode(HttpStatus.OK);
+        response.setMessage("USER LOGGED IN SUCCESSFULLY");
+        response.setData(userEntityDTO);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        if (e instanceof ApiException) {
+            ApiException exception = (ApiException) e;
+            return ResponseEntity.status(exception.getResponse().getHttpStatusCode()).body(exception.getResponse());
+        }
+    }
+    ApiResponse response = new ApiResponse();
+    response.setMessage("INTERNAL SERVER ERROR");
+    response.setData(null);
+    response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
+    return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
+}
 
 	@PostMapping("/logout")
 public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) {
-    Cookie cookie = new Cookie("jwt", null);
-		cookie.setPath("/");                   
-		cookie.setMaxAge(0);                    
-		cookie.setHttpOnly(true);              
-		cookie.setSecure(true);                
-		cookie.setAttribute("SameSite", "None"); 
-    ApiResponse apiresponse = new ApiResponse();
+    ResponseCookie cookie = ResponseCookie.from("jwt", null)
+        .path("/")
+        .maxAge(0)
+        .httpOnly(true)
+        .secure(true)
+        .sameSite("None")
+        .domain("chat-app-9lmm.onrender.com")
+        .build();
+
+    response.addHeader("Set-Cookie", cookie.toString());
+    
+    ApiResponse<String> apiresponse = new ApiResponse<>();
     apiresponse.setMessage("COOKIE REMOVED SUCCESSFULLY");
     apiresponse.setData(null);
     apiresponse.setHttpStatusCode(HttpStatus.OK);
