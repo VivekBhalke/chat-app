@@ -25,17 +25,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	}
 	
 	@Override
-	public  void registerStompEndpoints(StompEndpointRegistry registry )
-	{
-		registry
-			.addEndpoint("/ws")
-			.setAllowedOrigins(
-        "https://chat-app-sigma-pink.vercel.app", 
-        "http://localhost:5173",
-        "https://localhost:3000"
-    )
-			.setHandshakeHandler(userHandShakeHandler);
-    		.withSockJS();
-			
-	}
+public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry
+        .addEndpoint("/ws")
+        .setAllowedOrigins(
+            "https://chat-app-sigma-pink.vercel.app", 
+            "http://localhost:5173",
+            "https://localhost:3000"
+        )
+        .setHandshakeHandler(userHandShakeHandler)
+        .withSockJS(); // Move the semicolon here and remove the extra dot
+}
 }
