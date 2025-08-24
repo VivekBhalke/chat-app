@@ -39,7 +39,7 @@ const ChatNice: React.FC = () => {
     if (stompClient && selectedUser?.userId) {
       console.log("STOMP client connected. Subscribing...");
       // Subscribe to messages
-      const subscription = stompClient.subscribe(
+      const subscription = stompClient.subscribe( 
         `/user/queue/${selectedUser.userId}/${userId}/messages`,
         async (msg) => {
           if (msg.body) {
