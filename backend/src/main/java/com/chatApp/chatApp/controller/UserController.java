@@ -120,23 +120,24 @@ public class UserController {
 	}
 
 	@PostMapping("/logout")
-	public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) 
-	{
-		Cookie cookie = new Cookie("jwt", null);
-		cookie.setPath("/");                   
-		cookie.setMaxAge(0);                    
-		cookie.setHttpOnly(true);              
-		cookie.setSecure(true);                
-		cookie.setAttribute("SameSite", "None"); 
-		
-
-		response.addCookie(cookie);
-		ApiResponse apiresponse = new ApiResponse();
-		apiresponse.setMessage("COOKIE REMOVED SUCCESSFULLY");
-		apiresponse.setData(null);
-		apiresponse.setHttpStatusCode(HttpStatus.OK);
-		return ResponseEntity.status(HttpStatus.OK).body(apiresponse);
-	}
+public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) {
+    // Use the same approach as login/signup
+    ResponseCookie cookie = ResponseCookie.from("jwt", "")
+        .path("/")
+        .maxAge(0)
+        .httpOnly(true)
+        .secure(true)
+        .sameSite("None")
+        .build();
+    
+    response.setHeader("Set-Cookie", cookie.toString());
+    
+    ApiResponse apiresponse = new ApiResponse();
+    apiresponse.setMessage("COOKIE REMOVED SUCCESSFULLY");
+    apiresponse.setData(null);
+    apiresponse.setHttpStatusCode(HttpStatus.OK);
+    return ResponseEntity.status(HttpStatus.OK).body(apiresponse);
+}
 
 
 
