@@ -35,7 +35,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
         "https://localhost:3000"
     )
 			.setHandshakeHandler(userHandShakeHandler);
-//    		.withSockJS();
+    		.withSockJS();
 			
 	}
 }
