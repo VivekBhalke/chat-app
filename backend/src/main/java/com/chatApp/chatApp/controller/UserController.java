@@ -55,6 +55,7 @@ public ResponseEntity<ApiResponse<UserEntityDTO>> singup(@RequestBody UserEntity
             .httpOnly(true)
             .secure(true)
             .sameSite("None")
+			.domain("chat-app-9lmm.onrender.com")
             .build();
 
         servletResponse.addHeader("Set-Cookie", cookie.toString());
@@ -91,6 +92,7 @@ public ResponseEntity<ApiResponse<UserEntityDTO>> login(@RequestBody UserEntityD
             .httpOnly(true)
             .secure(true)
             .sameSite("None")
+			.domain("chat-app-9lmm.onrender.com")
             .build();
 
         servletResponse.addHeader("Set-Cookie", cookie.toString());
@@ -121,6 +123,7 @@ public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) 
         .httpOnly(true)
         .secure(true)
         .sameSite("None")
+		.domain("chat-app-9lmm.onrender.com")
         .build();
 
     response.addHeader("Set-Cookie", cookie.toString());
