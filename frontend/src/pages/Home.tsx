@@ -98,7 +98,7 @@ const Home: React.FC = () => {
       try {
         console.log("reached the stomp client connection part");
         const socket = new WebSocket(
-          "wss://chat-app-9lmm.onrender.com/ws"
+          "https://chat-app-9lmm.onrender.com/ws"
         );
         const client = over(socket);
 
