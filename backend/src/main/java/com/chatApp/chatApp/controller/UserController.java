@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.ResponseCookie;
 import com.chatApp.chatApp.dto.ChatEntityDTO;
 import com.chatApp.chatApp.dto.MessageEntityDTO;
 import com.chatApp.chatApp.dto.UserEntityDTO;
@@ -49,15 +49,15 @@ public class UserController {
 			userEntityDTO.setUserId(userId);
 			userEntityDTO.setPassword(null);
 			String token = jwtClass.getJWT(userId);
-			Cookie cookie = new Cookie("jwt", token);
-			cookie.setPath("/");                    
-			cookie.setMaxAge(60 * 60);  // 1 hour  
-			cookie.setHttpOnly(true);  // Prevent JavaScript access for security  
-			cookie.setSecure(true);  // Required for HTTPS  
-			//cookie.setDomain("chat-app-spring-boot-7.onrender.com");  // Set your domain  
-			cookie.setAttribute("SameSite", "None");  // Needed for cross-site requests  
-	        
-	        servletResponse.addCookie(cookie);
+			 ResponseCookie cookie = ResponseCookie.from("jwt", token)
+            .path("/")
+            .maxAge(60 * 60)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")  // This is the correct way
+            .build();
+        
+        servletResponse.setHeader("Set-Cookie", cookie.toString());
 			ApiResponse<UserEntityDTO> response = new ApiResponse<UserEntityDTO>();
 			response.setHttpStatusCode(HttpStatus.OK);
 			response.setMessage("USER CREATED SUCCESSFULLY");
@@ -88,15 +88,15 @@ public class UserController {
 			long userId = userService.login(userEntityDTO);
 			System.out.println("this is the user Id :" + userId);
 			String token = jwtClass.getJWT(userId);
-			Cookie cookie = new Cookie("jwt", token);
-			cookie.setPath("/");                    
-			cookie.setMaxAge(60 * 60);  // 1 hour  
-			cookie.setHttpOnly(true);  // Prevent JavaScript access for security  
-			cookie.setSecure(true);  // Required for HTTPS  
-			//cookie.setDomain("/");
-			//cookie.setDomain("chat-app-spring-boot-7.onrender.com");  // Set your domain  
-			cookie.setAttribute("SameSite", "None");  // Needed for cross-site requests              // 1 hour expiration
-	        servletResponse.addCookie(cookie);
+			 ResponseCookie cookie = ResponseCookie.from("jwt", token)
+            .path("/")
+            .maxAge(60 * 60)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")  // This is the correct way
+            .build();
+        
+        servletResponse.setHeader("Set-Cookie", cookie.toString());
 			ApiResponse<UserEntityDTO> response = new ApiResponse<>();
 			response.setHttpStatusCode(HttpStatus.OK);
 			response.setMessage("USER LOGGED IN  SUCCESSFULLY");
