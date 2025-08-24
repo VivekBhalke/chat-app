@@ -49,15 +49,15 @@ public class UserController {
 			userEntityDTO.setUserId(userId);
 			userEntityDTO.setPassword(null);
 			String token = jwtClass.getJWT(userId);
-			 ResponseCookie cookie = ResponseCookie.from("jwt", token)
-            .path("/")
-            .maxAge(60 * 60)
-            .httpOnly(true)
-            .secure(true)
-            .sameSite("None")  // This is the correct way
-            .build();
-        
-        servletResponse.setHeader("Set-Cookie", cookie.toString());
+			Cookie cookie = new Cookie("jwt", token);
+			cookie.setPath("/");                    
+			cookie.setMaxAge(60 * 60);  // 1 hour  
+			cookie.setHttpOnly(true);  // Prevent JavaScript access for security  
+			cookie.setSecure(true);  // Required for HTTPS  
+			cookie.domain('chat-app-9lmm.onrender.com')
+			cookie.setAttribute("SameSite", "None");  // Needed for cross-site requests  
+	        
+	        servletResponse.addCookie(cookie);
 			ApiResponse<UserEntityDTO> response = new ApiResponse<UserEntityDTO>();
 			response.setHttpStatusCode(HttpStatus.OK);
 			response.setMessage("USER CREATED SUCCESSFULLY");
@@ -88,15 +88,15 @@ public class UserController {
 			long userId = userService.login(userEntityDTO);
 			System.out.println("this is the user Id :" + userId);
 			String token = jwtClass.getJWT(userId);
-			 ResponseCookie cookie = ResponseCookie.from("jwt", token)
-            .path("/")
-            .maxAge(60 * 60)
-            .httpOnly(true)
-            .secure(true)
-            .sameSite("None")  // This is the correct way
-            .build();
-        
-        servletResponse.setHeader("Set-Cookie", cookie.toString());
+			Cookie cookie = new Cookie("jwt", token);
+			cookie.setPath("/");                    
+			cookie.setMaxAge(60 * 60);  // 1 hour  
+			cookie.setHttpOnly(true);  // Prevent JavaScript access for security  
+			cookie.setSecure(true);  // Required for HTTPS  
+			//cookie.setDomain("/");
+			cookie.domain('chat-app-9lmm.onrender.com')
+			cookie.setAttribute("SameSite", "None");  // Needed for cross-site requests              // 1 hour expiration
+	        servletResponse.addCookie(cookie);
 			ApiResponse<UserEntityDTO> response = new ApiResponse<>();
 			response.setHttpStatusCode(HttpStatus.OK);
 			response.setMessage("USER LOGGED IN  SUCCESSFULLY");
@@ -121,17 +121,12 @@ public class UserController {
 
 	@PostMapping("/logout")
 public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) {
-    // Use the same approach as login/signup
-    ResponseCookie cookie = ResponseCookie.from("jwt", "")
-        .path("/")
-        .maxAge(0)
-        .httpOnly(true)
-        .secure(true)
-        .sameSite("None")
-        .build();
-    
-    response.setHeader("Set-Cookie", cookie.toString());
-    
+    Cookie cookie = new Cookie("jwt", null);
+		cookie.setPath("/");                   
+		cookie.setMaxAge(0);                    
+		cookie.setHttpOnly(true);              
+		cookie.setSecure(true);                
+		cookie.setAttribute("SameSite", "None"); 
     ApiResponse apiresponse = new ApiResponse();
     apiresponse.setMessage("COOKIE REMOVED SUCCESSFULLY");
     apiresponse.setData(null);
