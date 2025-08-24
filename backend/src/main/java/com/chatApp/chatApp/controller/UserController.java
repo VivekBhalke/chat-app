@@ -118,6 +118,28 @@ public class UserController {
 		response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
 		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
 	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<ApiResponse<String>> logout(HttpServletResponse response) 
+	{
+		Cookie cookie = new Cookie("jwt", null);
+		cookie.setPath("/");                   
+		cookie.setMaxAge(0);                    
+		cookie.setHttpOnly(true);              
+		cookie.setSecure(true);                
+		cookie.setAttribute("SameSite", "None"); 
+		
+
+		response.addCookie(cookie);
+		ApiResponse apiresponse = new ApiResponse();
+		apiresponse.setMessage("COOKIE REMOVED SUCCESSFULLY");
+		apiresponse.setData(null);
+		apiresponse.setHttpStatusCode(HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(apiresponse);
+	}
+
+
+
 	@GetMapping("/searchUser")
 	public ResponseEntity<ApiResponse<List<UserEntityDTO>>> findUser(@RequestParam String username , HttpServletRequest request)
 	{
@@ -146,6 +168,9 @@ public class UserController {
 		
 	}
 	
+
+
+
 	@GetMapping("/me")
 	public ResponseEntity<ApiResponse<UserEntityDTO>> verifyCookie(HttpServletRequest request)
 	{
@@ -173,6 +198,8 @@ public class UserController {
 		response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
 		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(response);
 	}
+
+
 	
 	@GetMapping("/validateToken")
 	public ResponseEntity<ApiResponse<String>> verifyCookieToken(HttpServletRequest request)

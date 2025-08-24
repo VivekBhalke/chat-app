@@ -83,23 +83,22 @@ public class UserDAO {
 			try {
 				session = sessionFactory.openSession();
 				tx = session.beginTransaction();
-				String  hashedPassword = hashPassword.hashPassword(userEntityDTO.getPassword());
 				Query<UserEntity> q = session.createQuery("SELECT u  FROM UserEntity u "
-						+ "WHERE u.email=:EMAIL or u.password=:PASSWORD");
+						+ "WHERE u.email=:EMAIL");
 				q.setParameter("EMAIL", userEntityDTO.getEmail());
-				q.setParameter("PASSWORD", hashedPassword);
 				List<UserEntity> listOfUsers = q.getResultList();
 				if(listOfUsers.size() == 0)
 				{
 					ApiResponse<String> response = new ApiResponse<String>();
 					response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
 					response.setData(null);
-					response.setMessage("INCORRECT EMAIL OR PASSWORD");
+					response.setMessage("INCORRECT EMAIL");
 					ApiException exception = new ApiException();
 					exception.setResponse(response);
 					throw exception;
 				}
 				else if(listOfUsers.size()>  1) {
+					
 					ApiResponse<String> response = new ApiResponse<String>();
 					response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
 					response.setData(null);
@@ -108,8 +107,18 @@ public class UserDAO {
 					exception.setResponse(response);
 					throw exception;
 				}
-				System.out.println("GOT THE AUTHERIZED USER");
 				UserEntity user = listOfUsers.get(0);
+				if(!hashPassword.verify(userEntityDTO.getPassword(), user.getPassword()))
+				{
+					ApiResponse<String> response = new ApiResponse<String>();
+					response.setHttpStatusCode(HttpStatus.BAD_GATEWAY);
+					response.setData(null);
+					response.setMessage("INCORRECT PASSWORD");
+					ApiException exception = new ApiException();
+					exception.setResponse(response);
+					throw exception;
+				}
+				System.out.println("GOT THE AUTHERIZED USER");
 				userEntityDTO.setUserId(user.getUserId());
 				userEntityDTO.setPassword(null);
 				userEntityDTO.setUsername(user.getUsername());

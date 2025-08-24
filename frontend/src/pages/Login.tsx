@@ -16,6 +16,8 @@ const Login: React.FC = () => {
     console.log("reached the email and password thingi");
     try {
       console.log("called the login route");
+      console.log(email);
+      console.log(password);
       // const response = await axios.post("http://localhost:8080/user/login" , {
       const response = await axios.post("https://chat-app-9lmm.onrender.com/user/login", {
         email, password
